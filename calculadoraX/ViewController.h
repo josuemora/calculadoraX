@@ -9,5 +9,15 @@
 #import <UIKit/UIKit.h>
 
 @interface ViewController : UIViewController
+@property (strong, nonatomic) IBOutlet UILabel *lbl_tablero;
+- (IBAction)btn_numeros:(id)sender;
+- (IBAction)btn_del:(id)sender;
+@property (strong, nonatomic) IBOutlet UIButton *btn_operacion;
+- (IBAction)btn_operacion:(id)sender;
+@property float memoria;
+@property (strong, nonatomic) NSString * memoriatablero;
+@property (strong, nonatomic) NSString * memoriaoperacion;
 
+-(void)realizaoperacion:(NSString *)operacion;
+- (IBAction)btn_C:(id)sender;
 @end
