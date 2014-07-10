@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 @property (strong, nonatomic) IBOutlet UILabel *lbl_tablero;
 - (IBAction)btn_numeros:(id)sender;
 - (IBAction)btn_del:(id)sender;
@@ -20,4 +20,6 @@
 
 -(void)realizaoperacion:(NSString *)operacion;
 - (IBAction)btn_C:(id)sender;
+@property (strong, nonatomic) IBOutlet UITableView *tablita;
+@property (strong, nonatomic) NSMutableArray * aLista;
 @end

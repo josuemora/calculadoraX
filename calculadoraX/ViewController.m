@@ -13,14 +13,13 @@
 @end
 
 @implementation ViewController
-@synthesize lbl_tablero,memoria,memoriatablero,memoriaoperacion;
+@synthesize lbl_tablero,memoria,memoriatablero,memoriaoperacion,aLista,tablita;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    memoriatablero = @"";
-    lbl_tablero.text = memoriatablero;
-    memoria = 0;
+
+    [self btn_C:(nil)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -30,10 +29,11 @@
 }
 
 - (IBAction)btn_numeros:(id)sender {
-    NSLog(@"numero %@",[sender currentTitle]);
+    //NSLog(@"numero %@",[sender currentTitle]);
     NSString * tablero = [[NSString alloc] initWithFormat:@"%@%@", memoriatablero,[sender currentTitle]];
     lbl_tablero.text = tablero;
     memoriatablero = tablero;
+    lbl_tablero.textColor = [UIColor blackColor];
     
 }
 
@@ -48,26 +48,22 @@
 - (IBAction)btn_operacion:(id)sender {
     NSString * operacion = [[NSString alloc] initWithFormat:@"%@",[sender currentTitle] ];
     
-    if ([operacion isEqualToString:@"="]) {
-        operacion = memoriaoperacion;
-        [self realizaoperacion:operacion];
-        operacion = @"=";
-        
-    }else{
-    [self realizaoperacion:operacion];
-    }
-    
+    [self realizaoperacion:memoriaoperacion];
+
     lbl_tablero.text = [[NSString alloc] initWithFormat:@"%f",memoria ];
+    lbl_tablero.textColor = [UIColor greenColor];
     memoriatablero = @"";
     memoriaoperacion = operacion;
-   // NSLog(@"memoria %f", memoria);
 }
 
 
 
 -(void)realizaoperacion:(NSString *)operacion{
     float ftablero = [lbl_tablero.text floatValue];
+    float fmemoria = memoria;
+    NSString * sLog = @"";
 
+    
     if ([operacion isEqualToString:@"+"]) {
         memoria = memoria + ftablero;
     }
@@ -80,15 +76,53 @@
     if ([operacion isEqualToString:@"/"]) {
         memoria = memoria / ftablero;
     }
+    if ([operacion isEqualToString:@""]) {
+        memoria = ftablero;
+    }
 
+    //NSLog(@"Memoria:%f Operacion:%@ Valor:%f Resultado:%f",fmemoria, operacion, ftablero,memoria);
+    sLog = [[NSString alloc] initWithFormat:@"Memoria:%f Operacion:%@ Valor:%f Resultado:%f",fmemoria, operacion, ftablero,memoria];
+    [aLista addObject:sLog];
+    [tablita reloadData];
+   
+    NSIndexPath* ipath = [NSIndexPath indexPathForRow: [aLista count]-1 inSection: 0];
+    [tablita scrollToRowAtIndexPath: ipath atScrollPosition: UITableViewScrollPositionTop animated: YES];
 }
 
 - (IBAction)btn_C:(id)sender {
     memoriatablero = @"";
-    lbl_tablero.text = memoriatablero;
     memoria = 0;
     memoriaoperacion = @"";
+    lbl_tablero.text = @"0";
+    lbl_tablero.textColor = [UIColor blackColor];
+    aLista = [[NSMutableArray alloc] initWithArray:@[]];
+    [tablita reloadData];
+    
 }
+
+
+
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+
+    return [aLista count];
+}
+
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+
+    static NSString * MyCellId = @"MyCellId";
+    
+    UITableViewCell * cell = [self.tablita dequeueReusableCellWithIdentifier:MyCellId];
+    
+    if(cell == nil){
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:MyCellId];
+    }
+
+    [cell.textLabel setText:[aLista objectAtIndex:[indexPath row]]];
+    
+    
+    return cell;
+}
+
 
 
 @end
